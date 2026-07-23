@@ -1,0 +1,11 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Photos</title><link rel="stylesheet" href="styles.css"></head>
+<body><div class="app"><header><a class="back" href="index.html">← Assignment</a><h1 class="title">1. Capture six photos</h1><div class="sub">Choose camera or gallery. Each image is compressed and saved on this device.</div></header><main>
+<div class="card"><div class="photo-grid" id="grid"></div></div>
+<div class="notice">Use clear, genuine photos of the activity. The learner statement should explain how these photos relate to the same Health & Safety KSBs.</div>
+</main><div class="fixed-actions"><a class="button" href="statement.html">Save & continue</a></div></div>
+<script src="app.js"></script><script>
+const labels=["Safe work area prepared","Correct PPE selected","RPE or dust control used","RAMS / hazard controls followed","Safe working during the task","Finished task and final safety check"];
+(async()=>{for(let i=1;i<=6;i++){const d=document.createElement("div");d.className="photo-box";d.innerHTML=`<img id="im${i}" alt=""><label>${i}. ${labels[i-1]}</label><input id="f${i}" type="file" accept="image/*" capture="environment"><span class="small" id="m${i}">No photo added</span>`;grid.appendChild(d);
+ const old=await getPhoto(i);if(old){document.getElementById("im"+i).src=old;document.getElementById("m"+i).textContent="Photo saved ✓";}
+ document.getElementById("f"+i).onchange=async e=>{const file=e.target.files[0];if(!file)return;document.getElementById("m"+i).textContent="Saving...";const data=await compress(file);await putPhoto(i,data);document.getElementById("im"+i).src=data;document.getElementById("m"+i).textContent="Photo saved ✓";};
+}})();</script></body></html>

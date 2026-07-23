@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>College practical</title><link rel="stylesheet" href="styles.css"></head>
+<body><div class="app"><header><a class="back" href="index.html">← Assignment</a><h1 class="title">4. College practical assessment</h1><div class="sub">Completed and signed by the tutor after observing the learner in college.</div></header><main>
+<div class="card"><div class="field"><label>Practical task completed</label><input id="task" type="text" placeholder="Example: Prepare and maintain a safe bricklaying work area"></div><div class="field"><label>Location</label><input id="location" type="text"></div><div class="field"><label>Date assessed</label><input id="pdate" type="date"></div></div>
+<div class="card"><h3>Tutor assessment criteria</h3><div id="criteria"></div></div>
+<div class="card"><div class="field"><label>Tutor feedback</label><textarea id="feedback" style="min-height:130px" placeholder="Strengths observed and any development needed..."></textarea></div><div class="field"><label>Assessment result</label><select id="result"><option value="">Select result</option><option>Competent</option><option>Not Yet Competent</option></select></div>
+<div class="field"><label>Tutor full name</label><input id="tutor" type="text"></div><label><strong>Tutor signature</strong></label><canvas class="signature" id="tsig"></canvas><div class="signature-actions"><button class="button secondary" id="tclear" type="button">Clear signature</button></div></div>
+<div class="card"><h3>Mapped skills and behaviour</h3><div class="ksb"><strong>S1</strong>: Comply with health and safety regulations, standards, and guidance.</div><div class="ksb"><strong>S2</strong>: Identify and use PPE.</div><div class="ksb"><strong>B1</strong>: Put health, safety and wellbeing first.</div></div>
+</main><div class="fixed-actions"><a class="button" href="review.html">Save & review pack</a></div></div>
+<script src="app.js"></script><script>
+const list=["Completed the site/workshop induction requirements","Identified hazards before starting","Followed the risk assessment and method statement","Selected and used suitable PPE and RPE","Maintained safe access and a tidy work area","Used tools and safety controls correctly","Reported or acted on changing hazards","Put personal and others' wellbeing first"];
+criteria.innerHTML=list.map((x,i)=>`<label class="checkrow"><input type="checkbox" data-i="${i}"><span>${x}</span></label>`).join("");
+task.value=state.practical.task||"";location.value=state.practical.location||"College workshop";pdate.value=state.practical.date||new Date().toISOString().slice(0,10);feedback.value=state.practical.feedback||"";result.value=state.practical.result||"";tutor.value=state.practical.tutorName||"";
+document.querySelectorAll("[data-i]").forEach(c=>{c.checked=!!state.practical.criteria[c.dataset.i];c.onchange=()=>{state.practical.criteria[c.dataset.i]=c.checked;save();}});
+function s(){state.practical.task=task.value;state.practical.location=location.value;state.practical.date=pdate.value;state.practical.feedback=feedback.value;state.practical.result=result.value;state.practical.tutorName=tutor.value;save();}
+[task,location,pdate,feedback,result,tutor].forEach(e=>e.oninput=s);bindSignature("tsig","tclear","_unused");
+tsig.addEventListener("pointerup",()=>{state.practical.signed=true;save()});tclear.onclick=()=>{state.practical.signed=false;save()};
+</script></body></html>

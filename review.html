@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Review evidence pack</title><link rel="stylesheet" href="styles.css"></head>
+<body><div class="app"><header><a class="back" href="index.html">← Assignment</a><h1 class="title">5. Review & download</h1><div class="sub">Check the evidence pack, then generate one ZIP for upload to Aptem.</div></header><main>
+<div class="card"><h2 class="page">Evidence pack checklist</h2><div id="review"></div></div>
+<div id="readyMsg" class="success hidden">All required sections are complete. Your evidence ZIP is ready to generate.</div>
+<div id="notReady" class="notice hidden">Complete the missing sections before generating the final evidence pack.</div>
+<div class="card"><h3>ZIP contents</h3><p class="small">Evidence Summary.html, Learner Statement.txt, Knowledge Check Results.txt, College Practical Assessment.txt, KSB Mapping.txt, six JPG photographs and a machine-readable manifest.json.</p></div>
+<button id="download" class="button lime" disabled>Download evidence ZIP</button>
+<p class="small" style="text-align:center">The ZIP is generated entirely on this device. No evidence is uploaded anywhere by this prototype.</p>
+</main></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="app.js"></script><script>
+let status;
+(async()=>{status=await overallStatus();const rows=[["Six photographs",status.photos===6,`${status.photos}/6`],["Learner statement (100+ words, prompts and signature)",status.statement,`${wordCount(state.statement)} words`],["Knowledge check passed",status.quizok,state.quizScore===null?"Not completed":state.quizScore+"%"],["College practical marked competent and signed",status.prac,state.practical.result||"Not completed"]];
+review.innerHTML=rows.map(x=>`<div class="review-item"><span>${x[0]}<br><small>${x[2]}</small></span><strong class="${x[1]?"ok":"no"}">${x[1]?"Complete":"Missing"}</strong></div>`).join("");
+download.disabled=!status.done;readyMsg.classList.toggle("hidden",!status.done);notReady.classList.toggle("hidden",status.done);
+})();
+function dataToBlob(data){const [meta,b64]=data.split(",");const mime=meta.match(/:(.*?);/)[1],bin=atob(b64);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:mime});}
+download.onclick=async()=>{
+ if(!status.done)return;download.disabled=true;download.textContent="Building ZIP...";
+ const z=new JSZip(), folder=z.folder("Bricklayer_ST0095_Assignment_01_Health_and_Safety");
+ const hits=promptHits(state.statement);
+ const summary=`<!doctype html><meta charset="utf-8"><title>Evidence Summary</title><style>body{font-family:Arial;max-width:900px;margin:40px auto;line-height:1.5}h1{color:#073f49}table{border-collapse:collapse;width:100%}td,th{border:1px solid #bbb;padding:8px;text-align:left}</style><h1>${COURSE.course} ${COURSE.standard}</h1><h2>${COURSE.assignment}</h2><p><b>Learner:</b> ${esc(state.learnerName)}<br><b>Date:</b> ${esc(state.learnerDate)}</p><h3>Evidence included</h3><table><tr><th>Evidence</th><th>Status</th></tr><tr><td>Six photographs</td><td>Included</td></tr><tr><td>Learner statement</td><td>${wordCount(state.statement)} words, signed</td></tr><tr><td>Knowledge check</td><td>${state.quizScore}%</td></tr><tr><td>College practical</td><td>${esc(state.practical.result)}, tutor signed</td></tr></table><h3>KSB mapping</h3>${Object.entries(COURSE.ksbs).map(([k,v])=>`<p><b>${k}</b>: ${esc(v)}</p>`).join("")}`;
+ folder.file("01_Evidence_Summary.html",summary);
+ folder.file("02_Learner_Statement.txt",`${COURSE.assignment}\nLearner: ${state.learnerName}\nDate: ${state.learnerDate}\nSigned by learner: Yes\nWord count: ${wordCount(state.statement)}\nPrompts included: ${Object.entries(hits).filter(x=>x[1]).map(x=>x[0]).join(", ")}\n\n${state.statement}`);
+ let qr=`${COURSE.assignment}\nLearner: ${state.learnerName}\nScore: ${state.quizScore}%\nPass mark: 80%\nResult: ${state.quizPassed?"PASS":"NOT PASSED"}\n\n`;
+ quiz.forEach((x,i)=>{const chosen=state.quizAnswers[i];qr+=`${i+1}. ${x.q}\nAnswer: ${x.o[chosen]||"No answer"}\nCorrect answer: ${x.o[x.a]}\nKSB: ${x.k}\n\n`;});folder.file("03_Knowledge_Check_Results.txt",qr);
+ const checked=Object.entries(state.practical.criteria).filter(x=>x[1]).map(x=>Number(x[0])+1);
+ folder.file("04_College_Practical_Assessment.txt",`${COURSE.assignment}\nTask: ${state.practical.task}\nLocation: ${state.practical.location}\nDate: ${state.practical.date}\nResult: ${state.practical.result}\nTutor: ${state.practical.tutorName}\nTutor signed: Yes\n\nAssessment criteria met: ${checked.join(", ")}\n\nTutor feedback:\n${state.practical.feedback}`);
+ folder.file("05_KSB_Mapping.txt",Object.entries(COURSE.ksbs).map(([k,v])=>`${k}: ${v}`).join("\n\n"));
+ const photos=folder.folder("Photos");for(let i=1;i<=6;i++){const d=await getPhoto(i);photos.file(`Photo_${i}.jpg`,dataToBlob(d));}
+ folder.file("manifest.json",JSON.stringify({course:COURSE,learner:state.learnerName,date:state.learnerDate,photoCount:6,statementWords:wordCount(state.statement),quizScore:state.quizScore,practicalResult:state.practical.result,generated:new Date().toISOString()},null,2));
+ const blob=await z.generateAsync({type:"blob",compression:"DEFLATE",compressionOptions:{level:6}});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Bricklayer_ST0095_Assignment_01_Evidence_Pack.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+ state.completed=true;save();download.textContent="Download evidence ZIP";download.disabled=false;
+};
+</script></body></html>

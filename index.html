@@ -1,0 +1,19 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Assignment 1</title><link rel="stylesheet" href="styles.css"></head>
+<body><div class="app"><header><div class="brand">BRICKLAYER V1.2 · ST0095</div><h1 class="title">Assignment 1. Health & Safety</h1><div class="sub">Complete each section at your own pace. Your progress saves automatically on this device.</div></header>
+<main>
+<div class="card hero"><h2>Your evidence journey</h2><p>Build one complete, mapped evidence pack ready to upload.</p><div class="progress"><span id="bar"></span></div><div class="progress-row"><span id="pct">0% complete</span><span id="saved">Progress saved</span></div></div>
+<a class="card section-link" href="photos.html"><div class="icon">📷</div><div><h3>1. Capture six photos</h3><p>Camera or gallery, saved to this device</p></div><span id="sPhotos" class="status">Start</span></a>
+<a class="card section-link" href="statement.html"><div class="icon">📝</div><div><h3>2. Learner statement</h3><p>Minimum 100 words, prompts and signature</p></div><span id="sStatement" class="status">Start</span></a>
+<a class="card section-link" href="knowledge.html"><div class="icon">🧠</div><div><h3>3. Knowledge questions</h3><p>10 questions linked to the same KSBs</p></div><span id="sQuiz" class="status">Start</span></a>
+<a class="card section-link" href="practical.html"><div class="icon">🛠️</div><div><h3>4. College practical</h3><p>Tutor marking, feedback and signature</p></div><span id="sPractical" class="status">Start</span></a>
+<a class="card section-link" href="review.html"><div class="icon">📦</div><div><h3>5. Review & download</h3><p>Generate the completed evidence ZIP</p></div><span id="sPack" class="status">Locked</span></a>
+<div class="card"><h3>Mapped KSBs</h3><div id="ksbs"></div></div>
+</main><footer>Prototype evidence workflow · Data stays on this device</footer></div>
+<script src="app.js"></script><script>
+(async()=>{ksbs.innerHTML=ksbHtml();const x=await overallStatus();bar.style.width=x.percent+"%";pct.textContent=x.percent+"% complete";
+sPhotos.textContent=x.photos+"/6"; if(x.photos===6)sPhotos.classList.add("done");
+sStatement.textContent=x.statement?"Done":"Start";if(x.statement)sStatement.classList.add("done");
+sQuiz.textContent=x.quizok?"Passed":"Start";if(x.quizok)sQuiz.classList.add("done");
+sPractical.textContent=x.prac?"Competent":"Start";if(x.prac)sPractical.classList.add("done");
+sPack.textContent=x.done?"Ready":"Locked";if(x.done)sPack.classList.add("done");
+})();</script></body></html>

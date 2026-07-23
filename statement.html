@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Learner statement</title><link rel="stylesheet" href="styles.css"></head>
+<body><div class="app"><header><a class="back" href="index.html">← Assignment</a><h1 class="title">2. Learner statement</h1><div class="sub">Explain the activity in your own words and sign to confirm it is your work.</div></header><main>
+<div class="card"><h2 class="page">Explain how you worked safely</h2><p class="lead">Describe what you did, how you followed health and safety requirements, the PPE and controls used, and what you did when identifying hazards.</p>
+<div class="prompt-list" id="prompts"></div>
+<textarea id="text" placeholder="Start typing your activity statement here..."></textarea><div class="counter"><span id="words">0</span> / 100 minimum words · <span id="hits">0</span> prompts included</div></div>
+<div class="card"><div class="field"><label>Learner full name</label><input type="text" id="name"></div><div class="field"><label>Date</label><input type="date" id="date"></div>
+<label><strong>Learner signature</strong></label><canvas class="signature" id="sig"></canvas><div class="signature-actions"><button class="button secondary" id="clear" type="button">Clear signature</button></div>
+<p class="small">By signing, the learner confirms the statement is their own account and relates to the photographs in this assignment.</p></div>
+<div class="card"><h3>Mapped KSBs</h3><div id="ksbs"></div></div>
+</main><div class="fixed-actions"><a class="button" href="knowledge.html">Save & continue</a></div></div>
+<script src="app.js"></script><script>
+ksbs.innerHTML=ksbHtml();text.value=state.statement||"";name.value=state.learnerName||"";date.value=state.learnerDate||new Date().toISOString().slice(0,10);
+function render(){const h=promptHits(text.value);prompts.innerHTML=Object.entries(h).map(([p,v])=>`<span class="prompt ${v?"hit":""}">${v?"✓ ":""}${p}</span>`).join("");words.textContent=wordCount(text.value);hits.textContent=Object.values(h).filter(Boolean).length;}
+text.oninput=()=>{state.statement=text.value;save();render()};name.oninput=()=>{state.learnerName=name.value;save()};date.onchange=()=>{state.learnerDate=date.value;save()};render();bindSignature("sig","clear","learnerSigned");
+</script></body></html>
