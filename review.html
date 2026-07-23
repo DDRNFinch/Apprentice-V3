@@ -3,7 +3,7 @@
 <div class="card"><h2 class="page">Evidence pack checklist</h2><div id="review"></div></div>
 <div id="readyMsg" class="success hidden">All required sections are complete. Your evidence ZIP is ready to generate.</div>
 <div id="notReady" class="notice hidden">Complete the missing sections before generating the final evidence pack.</div>
-<div class="card"><h3>ZIP contents</h3><p class="small">Evidence Summary.html, Learner Statement.txt, Knowledge Check Results.txt, College Practical Assessment.txt, KSB Mapping.txt, six JPG photographs and a machine-readable manifest.json.</p></div>
+<div class="card"><h3>ZIP contents</h3><p class="small">Evidence Summary.html, Learner Statement.txt, Knowledge Check Results.txt, College Practical Assessment.txt, KSB Mapping.txt, six JPG photographs, any optional Witness Testimony or Employer Review, and a manifest.json.</p></div>
 <button id="download" class="button lime" disabled>Download evidence ZIP</button>
 <p class="small" style="text-align:center">The ZIP is generated entirely on this device. No evidence is uploaded anywhere by this prototype.</p>
 </main></div>
@@ -27,6 +27,8 @@ download.onclick=async()=>{
  folder.file("04_College_Practical_Assessment.txt",`${COURSE.assignment}\nTask: ${state.practical.task}\nLocation: ${state.practical.location}\nDate: ${state.practical.date}\nResult: ${state.practical.result}\nTutor: ${state.practical.tutorName}\nTutor signed: Yes\n\nAssessment criteria met: ${checked.join(", ")}\n\nTutor feedback:\n${state.practical.feedback}`);
  folder.file("05_KSB_Mapping.txt",Object.entries(COURSE.ksbs).map(([k,v])=>`${k}: ${v}`).join("\n\n"));
  const photos=folder.folder("Photos");for(let i=1;i<=6;i++){const d=await getPhoto(i);photos.file(`Photo_${i}.jpg`,dataToBlob(d));}
+ const wt=JSON.parse(localStorage.getItem("brick_witness_v1")||"{}");if(wt.completed){folder.file("06_Optional_Witness_Testimony.txt",`Witness: ${wt.name}\nRole: ${wt.role}\nDate: ${wt.date}\nActivity: ${wt.activity}\nSigned: Yes\n\n${wt.text}`);}
+ const er=JSON.parse(localStorage.getItem("brick_employer_v1")||"{}");if(er.completed){folder.file("07_Optional_Employer_Review.txt",`Employer / Manager: ${er.name}\nRole: ${er.role}\nDate: ${er.date}\nJudgement: ${er.judgement}\nSigned: Yes\n\n${er.text}`);}
  folder.file("manifest.json",JSON.stringify({course:COURSE,learner:state.learnerName,date:state.learnerDate,photoCount:6,statementWords:wordCount(state.statement),quizScore:state.quizScore,practicalResult:state.practical.result,generated:new Date().toISOString()},null,2));
  const blob=await z.generateAsync({type:"blob",compression:"DEFLATE",compressionOptions:{level:6}});
  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Bricklayer_ST0095_Assignment_01_Evidence_Pack.zip";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);

@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Employer Review</title><link rel="stylesheet" href="styles.css"></head>
+<body><div class="app"><header><a class="back" href="index.html">← Evidence Pack</a><h1 class="title">ER · Employer Review</h1><div class="sub">Optional supporting evidence covering the learner’s wider workplace performance over time.</div></header><main>
+<div class="card"><div class="field"><label>Employer / manager name</label><input id="ename" type="text"></div><div class="field"><label>Job role</label><input id="erole" type="text"></div><div class="field"><label>Review date</label><input id="edate" type="date"></div><div class="field"><label>Employer review</label><textarea id="etext" placeholder="Comment on safe working, reliability, consistency, communication and performance over time."></textarea></div>
+<div class="field"><label>Overall judgement</label><select id="judgement"><option value="">Select</option><option>Working towards the required standard</option><option>Consistently meeting the required standard</option><option>Exceeding the required standard</option></select></div>
+<label><strong>Employer signature</strong></label><canvas class="signature" id="esig"></canvas><div class="signature-actions"><button class="button secondary" id="eclear" type="button">Clear signature</button></div></div>
+</main><div class="fixed-actions"><button id="saveBtn" class="button">Save employer review</button></div></div>
+<script src="app.js"></script><script>
+const KEYE="brick_employer_v1";let e=JSON.parse(localStorage.getItem(KEYE)||"{}");
+ename.value=e.name||"";erole.value=e.role||"";edate.value=e.date||new Date().toISOString().slice(0,10);etext.value=e.text||"";judgement.value=e.judgement||"";
+function saveE(){e={...e,name:ename.value,role:erole.value,date:edate.value,text:etext.value,judgement:judgement.value};localStorage.setItem(KEYE,JSON.stringify(e));}
+[ename,erole,edate,etext,judgement].forEach(x=>x.oninput=saveE);bindSignature("esig","eclear","_e");
+esig.addEventListener("pointerup",()=>{e.signed=true;saveE()});eclear.onclick=()=>{e.signed=false;saveE()};
+saveBtn.onclick=()=>{saveE();e.completed=!!(e.name&&e.role&&e.date&&e.text.trim().length>=50&&e.judgement&&e.signed);localStorage.setItem(KEYE,JSON.stringify(e));location.href="index.html"};
+</script></body></html>

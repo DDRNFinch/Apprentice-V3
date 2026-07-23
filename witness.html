@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Witness Testimony</title><link rel="stylesheet" href="styles.css"></head>
+<body><div class="app"><header><a class="back" href="index.html">← Evidence Pack</a><h1 class="title">WT · Witness Testimony</h1><div class="sub">Optional supporting evidence from someone who directly observed a specific workplace activity.</div></header><main>
+<div class="card"><div class="field"><label>Witness full name</label><input id="wname" type="text"></div><div class="field"><label>Job role</label><input id="wrole" type="text"></div><div class="field"><label>Date observed</label><input id="wdate" type="date"></div><div class="field"><label>Activity observed</label><input id="activity" type="text"></div><div class="field"><label>Witness testimony</label><textarea id="text" placeholder="Describe exactly what the learner did, how they worked safely, and the standard achieved."></textarea></div>
+<label><strong>Witness signature</strong></label><canvas class="signature" id="sig"></canvas><div class="signature-actions"><button class="button secondary" id="clear" type="button">Clear signature</button></div></div>
+</main><div class="fixed-actions"><button id="saveBtn" class="button">Save testimony</button></div></div>
+<script src="app.js"></script><script>
+const KEYW="brick_witness_v1";let w=JSON.parse(localStorage.getItem(KEYW)||"{}");
+wname.value=w.name||"";wrole.value=w.role||"";wdate.value=w.date||new Date().toISOString().slice(0,10);activity.value=w.activity||"";text.value=w.text||"";
+function saveW(){w={...w,name:wname.value,role:wrole.value,date:wdate.value,activity:activity.value,text:text.value};localStorage.setItem(KEYW,JSON.stringify(w));}
+[wname,wrole,wdate,activity,text].forEach(e=>e.oninput=saveW);bindSignature("sig","clear","_w");
+sig.addEventListener("pointerup",()=>{w.signed=true;saveW()});clear.onclick=()=>{w.signed=false;saveW()};
+saveBtn.onclick=()=>{saveW();w.completed=!!(w.name&&w.role&&w.date&&w.activity&&w.text.trim().length>=50&&w.signed);localStorage.setItem(KEYW,JSON.stringify(w));location.href="index.html"};
+</script></body></html>

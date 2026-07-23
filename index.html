@@ -1,19 +1,49 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Assignment 1</title><link rel="stylesheet" href="styles.css"></head>
-<body><div class="app"><header><div class="brand">BRICKLAYER V1.2 · ST0095</div><h1 class="title">Assignment 1. Health & Safety</h1><div class="sub">Complete each section at your own pace. Your progress saves automatically on this device.</div></header>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evidence Pack 1</title><link rel="stylesheet" href="styles.css"></head>
+<body><div class="app"><header><div class="brand">BRICKLAYER V1.2 · ST0095</div><h1 class="title">Evidence Pack 1 – Health & Safety</h1><div class="sub">Complete each section at your own pace. Progress saves automatically on this device.</div></header>
 <main>
-<div class="card hero"><h2>Your evidence journey</h2><p>Build one complete, mapped evidence pack ready to upload.</p><div class="progress"><span id="bar"></span></div><div class="progress-row"><span id="pct">0% complete</span><span id="saved">Progress saved</span></div></div>
-<a class="card section-link" href="photos.html"><div class="icon">📷</div><div><h3>1. Capture six photos</h3><p>Camera or gallery, saved to this device</p></div><span id="sPhotos" class="status">Start</span></a>
-<a class="card section-link" href="statement.html"><div class="icon">📝</div><div><h3>2. Learner statement</h3><p>Minimum 100 words, prompts and signature</p></div><span id="sStatement" class="status">Start</span></a>
-<a class="card section-link" href="knowledge.html"><div class="icon">🧠</div><div><h3>3. Knowledge questions</h3><p>10 questions linked to the same KSBs</p></div><span id="sQuiz" class="status">Start</span></a>
-<a class="card section-link" href="practical.html"><div class="icon">🛠️</div><div><h3>4. College practical</h3><p>Tutor marking, feedback and signature</p></div><span id="sPractical" class="status">Start</span></a>
-<a class="card section-link" href="review.html"><div class="icon">📦</div><div><h3>5. Review & download</h3><p>Generate the completed evidence ZIP</p></div><span id="sPack" class="status">Locked</span></a>
-<div class="card"><h3>Mapped KSBs</h3><div id="ksbs"></div></div>
-</main><footer>Prototype evidence workflow · Data stays on this device</footer></div>
+<div class="card hero"><h2>Your evidence pack</h2><p>Complete the college and workplace evidence, then review the mapped KSBs and download the final ZIP.</p><div class="progress"><span id="bar"></span></div><div class="progress-row"><span id="pct">0% complete</span><span>Progress saved</span></div></div>
+
+<div class="grid-groups">
+  <section class="group-card">
+    <h2 class="group-title">College</h2>
+    <div class="evidence-grid">
+      <a class="grid-tile" href="practical.html"><div><div class="tile-code">PA</div><h3>Practical</h3><p>College practical assessment marked and signed by the tutor.</p></div><span id="sPractical" class="status">Start</span></a>
+      <a class="grid-tile" href="knowledge.html"><div><div class="tile-code">KQ</div><h3>Questions</h3><p>Ten knowledge questions linked to the Health & Safety KSBs.</p></div><span id="sQuiz" class="status">Start</span></a>
+    </div>
+  </section>
+
+  <section class="group-card">
+    <h2 class="group-title">Workplace</h2>
+    <div class="evidence-grid">
+      <a class="grid-tile" href="photos.html"><div><div class="tile-code">PE</div><h3>Photos</h3><p>Six photographs showing safe preparation, controls and working.</p></div><span id="sPhotos" class="status">Start</span></a>
+      <a class="grid-tile" href="statement.html"><div><div class="tile-code">LS</div><h3>Statement</h3><p>Learner activity statement, prompts, date and signature.</p></div><span id="sStatement" class="status">Start</span></a>
+    </div>
+  </section>
+
+  <section class="group-card">
+    <h2 class="group-title">Observations · Optional</h2>
+    <div class="evidence-grid">
+      <a class="grid-tile optional" href="witness.html"><div><div class="tile-code">WT</div><h3>Witness testimony</h3><p>A workplace witness confirms a specific activity they observed.</p></div><span id="sWitness" class="status ready">Optional</span></a>
+      <a class="grid-tile optional" href="employer.html"><div><div class="tile-code">ER</div><h3>Employer review</h3><p>An employer comments on wider performance and consistency.</p></div><span id="sEmployer" class="status ready">Optional</span></a>
+    </div>
+  </section>
+
+  <section class="group-card">
+    <h2 class="group-title">Evidence</h2>
+    <div class="evidence-grid">
+      <a class="grid-tile evidence" href="ksbs.html"><div><div class="tile-code">KSB</div><h3>Knowledge, Skills & Behaviours</h3><p>View the KSBs mapped to this evidence pack.</p></div><span class="status done">Mapped</span></a>
+      <a class="grid-tile evidence" href="review.html"><div><div class="tile-code">EP</div><h3>Evidence Pack</h3><p>Review completion and download the final Aptem ZIP.</p></div><span id="sPack" class="status">Locked</span></a>
+    </div>
+  </section>
+</div>
+</main><footer>Evidence Pack 1 · Health & Safety</footer></div>
 <script src="app.js"></script><script>
-(async()=>{ksbs.innerHTML=ksbHtml();const x=await overallStatus();bar.style.width=x.percent+"%";pct.textContent=x.percent+"% complete";
+(async()=>{const x=await overallStatus();bar.style.width=x.percent+"%";pct.textContent=x.percent+"% complete";
 sPhotos.textContent=x.photos+"/6"; if(x.photos===6)sPhotos.classList.add("done");
 sStatement.textContent=x.statement?"Done":"Start";if(x.statement)sStatement.classList.add("done");
 sQuiz.textContent=x.quizok?"Passed":"Start";if(x.quizok)sQuiz.classList.add("done");
 sPractical.textContent=x.prac?"Competent":"Start";if(x.prac)sPractical.classList.add("done");
 sPack.textContent=x.done?"Ready":"Locked";if(x.done)sPack.classList.add("done");
+const wt=JSON.parse(localStorage.getItem("brick_witness_v1")||"{}"); if(wt.completed){sWitness.textContent="Added";sWitness.classList.add("done")}
+const er=JSON.parse(localStorage.getItem("brick_employer_v1")||"{}"); if(er.completed){sEmployer.textContent="Added";sEmployer.classList.add("done")}
 })();</script></body></html>

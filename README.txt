@@ -19,3 +19,10 @@ The prototype includes:
 Important:
 The final ZIP function loads JSZip from cdnjs, so the device must have internet access when generating the ZIP.
 Data is saved only in the browser/device used by the learner.
+
+Updated home layout:
+- 2 columns x 4 rows
+- College: PA, KQ
+- Workplace: PE, LS
+- Optional observations: WT, ER
+- Evidence: KSB, EP
